@@ -14,3 +14,4 @@ galaxy_info:
 
 dependencies:
   - role: indigo-dc.docker
+  - role: mtangaro.docker_compose
