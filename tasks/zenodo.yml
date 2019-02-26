@@ -1,0 +1,24 @@
+---
+- name: Clone Zenodo
+  git:
+    repo: 'https://github.com/zenodo/zenodo.git'
+    dest: '{{ zenodo_install_path }}'
+    version: master
+
+- docker_service: Build docker
+    project_name: zenodo
+    project_src: '{{ zenodo_install_path }}'
+    build: yes
+    state: present
+
+- docker_service:
+    project_name: zenodo
+    services:
+      web:
+        build: no
+        command: '/bin/bash /code/zenodo/scripts/init.sh'
+      statsd:
+        build: no
+        command: '/bin/bash /init.sh'
+        depends_on:
+          - web
