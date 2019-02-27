@@ -1,2 +1,2 @@
 ---
-# tasks file for ansible-role-zenodo-repository
+- include: zenodo.yml
