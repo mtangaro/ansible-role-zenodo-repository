@@ -1,2 +1,2 @@
 ---
-# defaults file for ansible-role-zenodo-repository
+zenodo_install_path: '/srv/zenodo'
