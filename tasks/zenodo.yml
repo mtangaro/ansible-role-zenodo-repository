@@ -6,7 +6,6 @@
     version: master
 
 - docker_service: Build docker
-    project_name: zenodo
     project_src: '{{ zenodo_install_path }}'
     build: yes
     state: present
