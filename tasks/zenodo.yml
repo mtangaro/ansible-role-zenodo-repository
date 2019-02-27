@@ -5,19 +5,26 @@
     dest: '{{ zenodo_install_path }}'
     version: master
 
-- docker_service: Build docker
-    project_src: '{{ zenodo_install_path }}'
-    build: yes
-    state: present
+- name: Build docker
+  command: '{{ item }}'
+  args:
+    chdir: '{{ zenodo_install_path }}'
+  with_items:
+    - '{{ docker_compose_executable }} build'
+    - '{{ docker-compose-executable }} up'
 
-- docker_service:
-    project_name: zenodo
-    services:
-      web:
-        build: no
-        command: '/bin/bash /code/zenodo/scripts/init.sh'
-      statsd:
-        build: no
-        command: '/bin/bash /init.sh'
-        depends_on:
-          - web
+- name: 'Create the database, indexes, fixtures and an admin user'
+  command: '{{ item }}'
+  with_items:
+    - '{{ docker-compose-executable }} run --rm web bash /code/zenodo/scripts/init.sh'
+    - '{{ docker-compose-executable }} run --rm statsd bash /init.sh'
+
+- name: Load demo records
+  command: '{{ item }}'
+  with_items:
+    - '{{ docker-compose-executable }} run --rm web zenodo fixtures loaddemorecords'
+    - '{{ docker-compose-executable }} run --rm web zenodo migration recordsrun'
+    - '{{ docker-compose-executable }} run --rm web zenodo index reindex --yes-i-know'
+    - '{{ docker-compose-executable }} run --rm web zenodo index run -d'
+
+
