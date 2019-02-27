@@ -11,20 +11,20 @@
     chdir: '{{ zenodo_install_path }}'
   with_items:
     - '{{ docker_compose_executable }} build'
-    - '{{ docker-compose-executable }} up'
+    - '{{ docker_compose_executable }} up'
 
-- name: 'Create the database, indexes, fixtures and an admin user'
+- name: Create the database, indexes, fixtures and an admin user
   command: '{{ item }}'
   with_items:
-    - '{{ docker-compose-executable }} run --rm web bash /code/zenodo/scripts/init.sh'
-    - '{{ docker-compose-executable }} run --rm statsd bash /init.sh'
+    - '{{ docker_compose_executable }} run --rm web bash /code/zenodo/scripts/init.sh'
+    - '{{ docker_compose_executable }} run --rm statsd bash /init.sh'
 
 - name: Load demo records
   command: '{{ item }}'
   with_items:
-    - '{{ docker-compose-executable }} run --rm web zenodo fixtures loaddemorecords'
-    - '{{ docker-compose-executable }} run --rm web zenodo migration recordsrun'
-    - '{{ docker-compose-executable }} run --rm web zenodo index reindex --yes-i-know'
-    - '{{ docker-compose-executable }} run --rm web zenodo index run -d'
+    - '{{ docker_compose_executable }} run --rm web zenodo fixtures loaddemorecords'
+    - '{{ docker_compose_executable }} run --rm web zenodo migration recordsrun'
+    - '{{ docker_compose_executable }} run --rm web zenodo index reindex --yes-i-know'
+    - '{{ docker_compose_executable }} run --rm web zenodo index run -d'
 
 
